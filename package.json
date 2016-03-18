@@ -1,0 +1,19 @@
+{
+  "name": "meetup-slackbot",
+  "version": "1.0.0",
+  "description": "Meetup.com Slack Bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akozlik/slack-meetup.git"
+  },
+  "author": "Andrew Kozlik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/akozlik/slack-meetup/issues"
+  },
+  "homepage": "https://github.com/akozlik/slack-meetup#readme"
+}
