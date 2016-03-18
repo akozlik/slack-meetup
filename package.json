@@ -18,6 +18,8 @@
   "homepage": "https://github.com/akozlik/slack-meetup#readme",
   "dependencies": {
     "express": "^4.13.4",
-    "hbs": "*"
+    "hbs": "*",
+    "request-json":"*",
+    "dotenv":"*"
   }
 }
