@@ -31,6 +31,6 @@ function receivedEvents(body) {
     }
 }
 
-app.listen(app.get('port'), function() {
+app.listen(app.get('port') || 5000, function() {
     console.log("Node app is running on port " + app.get('port'));
 });
