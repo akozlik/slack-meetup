@@ -9,6 +9,10 @@ app.set('port', 3000);
 app.set('view engine', 'html');
 app.engine('html', hbs.__express);
 
+app.get('/meetup', function(req, res) {
+    res.send("Meetup");
+});
+
 app.get('/', function(req, res) {
     res.render('index');
 });
