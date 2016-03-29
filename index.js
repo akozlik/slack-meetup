@@ -27,6 +27,7 @@ app.get('/meetup', function(req, res) {
 });
 
 app.post('/meetup', function(req, res, next) {
+    console.log(req.body);
     console.log(req.body.token);
     var responseURL = req.body.response_url;
     res.send("");
