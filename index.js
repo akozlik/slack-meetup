@@ -43,18 +43,22 @@ function receivedEvents(body) {
 
     var attachments = [];
 
+    if (body.results.length === 0) {
+        message.text = "There are no meetups scheduled. How did that happen?";
+        slack.postMessageToChannel(message);
+        return;
+    }
+
     for (var i = 0; i < body.results.length; i++) {
 
         var text = "";
         var result = body.results[i];
         var attachment = {};
-
         var date = new Date(result.time);
-        console.log(date);
-
+        
         title = "<" + result.event_url + "|" + result.name + ">" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
+        
         text += dateFormat(date, "dddd, mmmm dS h:MM TT") + "\n";
-
         text += striptags(result.description) + "\n\n";
 
         attachment.title = title;
@@ -68,7 +72,6 @@ function receivedEvents(body) {
     message.attachments = attachments;
 
     slack.postMessageToChannel(message);
-    console.log("done");
 }
 
 app.listen(process.env.PORT || 3000, function() {

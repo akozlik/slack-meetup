@@ -16,7 +16,7 @@ module.exports = {
     },
 
     postMessageToChannel: function(attachment, channel) {
-        console.log("Posting");
+
         var message = this.baseMessage();
 
         message = merge(message, attachment);
@@ -25,16 +25,12 @@ module.exports = {
             message.channel = channel;
         }
 
-        // console.log(message);
-
         request.post({
             url: process.env.SLACK_WEBHOOK_INCOMING,
             body: JSON.stringify(message)
         }, function(err, httpResponse, body) {
             if (err) {
                 console.error(body);
-            } else {
-                console.log("Message sent");
             }
         });
 
