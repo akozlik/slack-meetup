@@ -19,9 +19,10 @@
   },
   "homepage": "https://github.com/akozlik/slack-meetup#readme",
   "dependencies": {
+    "body-parser": "^1.15.0",
+    "dotenv": "*",
     "express": "^4.13.4",
     "hbs": "*",
-    "request-json":"*",
-    "dotenv":"*"
+    "request-json": "*"
   }
 }
