@@ -12,7 +12,7 @@ var app = express();
 var hbs = require('hbs');
 var response_url = "";
 
-var topics = ["iOS","android","react","php","javascript","iot","dotnet","ruby","angular","aws","bigdata","clojure","css","drupal","wordpress","programming","java","node","swift","objective-c","sql"];
+var topicsArray = ["iOS","android","react","php","javascript","iot","dotnet","ruby","angular","aws","bigdata","clojure","css","drupal","wordpress","programming","java","node","swift","objective-c","sql"];
 
 app.set('port', 3000);
 app.set('view engine', 'html');
@@ -25,21 +25,19 @@ app.use(bodyParser.urlencoded({
 }));
 
 
+/* Routes */
+
 app.get('/meetup', function(req, res) {
     res.send("Meetup");
 });
 
 app.post('/meetup', function(req, res, next) {
-    // console.log("===== MEETUP POST =====");
-    // console.log(req.body);
-    // console.log(req.body.token);
-    // console.log("===== END MEETUP POST =====");
 
     response_url = req.body.response_url;
-    // meetup.events("iOS+Android+Javascript+net+react+wordpress+iot+php", receivedEvents);
-    var topicsStr = topics.join();
 
-    meetup.events(topicsStr, receivedEvents);
+    var topics = topicsArray.join();
+
+    meetup.events(topics, receivedEvents);
     res.send("");
 });
 
@@ -47,23 +45,18 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+/* Callback */
 function receivedEvents(body) {
 
     var message = {response_type: "ephemeral"};
 
     var attachments = [];
 
-    console.log(body);
-
     if (body.results === undefined || body.results.length === 0) {
         message.text = "There are no meetups scheduled. How did that happen?";
         slack.postMessageToChannel(message);
         return;
     }
-
-    console.log(body.results);
-    console.log("====== Total Results ======");
-    console.log(body.results.length);
 
     for (var i = 0; i < body.results.length; i++) {
 
@@ -91,6 +84,7 @@ function receivedEvents(body) {
     slack.postMessageToChannel(message);
 }
 
+/* Start Server */
 app.listen(process.env.PORT || 3000, function() {
     console.log("Node app is running on port " + app.get('port'));
 });
