@@ -12,6 +12,8 @@ var app = express();
 var hbs = require('hbs');
 var response_url = "";
 
+var topics = ["iOS","android","react","php","javascript","iot","dotnet","ruby","angular","aws","bigdata","clojure","css","drupal","wordpress","programming","java","node","swift","objective-c","sql"];
+
 app.set('port', 3000);
 app.set('view engine', 'html');
 
@@ -34,7 +36,10 @@ app.post('/meetup', function(req, res, next) {
     // console.log("===== END MEETUP POST =====");
 
     response_url = req.body.response_url;
-    meetup.events("iOS", receivedEvents);
+    // meetup.events("iOS+Android+Javascript+net+react+wordpress+iot+php", receivedEvents);
+    var topicsStr = topics.join();
+
+    meetup.events(topicsStr, receivedEvents);
     res.send("");
 });
 
@@ -48,11 +53,17 @@ function receivedEvents(body) {
 
     var attachments = [];
 
-    if (body.results.length === 0) {
+    console.log(body);
+
+    if (body.results === undefined || body.results.length === 0) {
         message.text = "There are no meetups scheduled. How did that happen?";
         slack.postMessageToChannel(message);
         return;
     }
+
+    console.log(body.results);
+    console.log("====== Total Results ======");
+    console.log(body.results.length);
 
     for (var i = 0; i < body.results.length; i++) {
 
