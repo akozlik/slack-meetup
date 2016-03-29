@@ -10,6 +10,7 @@ var express = require('express');
 
 var app = express();
 var hbs = require('hbs');
+var response_url = "";
 
 app.set('port', 3000);
 app.set('view engine', 'html');
@@ -27,15 +28,17 @@ app.get('/meetup', function(req, res) {
 });
 
 app.post('/meetup', function(req, res, next) {
-    console.log(req.body);
-    console.log(req.body.token);
-    
+    // console.log("===== MEETUP POST =====");
+    // console.log(req.body);
+    // console.log(req.body.token);
+    // console.log("===== END MEETUP POST =====");
+
     meetup.events("iOS", receivedEvents);
+    res.send("");
 });
 
 app.get('/', function(req, res) {
     res.render('index');
-    meetup.events("iOS", receivedEvents);
 });
 
 function receivedEvents(body) {
