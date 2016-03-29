@@ -15,7 +15,7 @@ module.exports = {
         };
     },
 
-    postAttachmentToChannel: function(attachment, channel) {
+    postMessageToChannel: function(attachment, channel) {
         console.log("Posting");
         var message = this.baseMessage();
 

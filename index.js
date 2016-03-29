@@ -38,25 +38,36 @@ app.get('/', function(req, res) {
 });
 
 function receivedEvents(body) {
-    console.log("========= GOT BODY =========");
-    // console.log(body.results);
 
-    var attachment = {response_type: "ephemeral"};
+    var message = {response_type: "ephemeral"};
 
-    var text = "";
+    var attachments = [];
+
     for (var i = 0; i < body.results.length; i++) {
-        var result = body.results[i];
 
-        var date = new Date(1460070000000);
+        var text = "";
+        var result = body.results[i];
+        var attachment = {};
+
+        var date = new Date(result.time);
         console.log(date);
 
-        text += "*<" + result.event_url + "|" + result.name + ">*" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
+        title = "<" + result.event_url + "|" + result.name + ">" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
+        text += dateFormat(date, "dddd, mmmm dS h:MM TT") + "\n";
+
         text += striptags(result.description) + "\n\n";
+
+        attachment.title = title;
+        attachment.text = text;
+        attachment.color = "#A5C8D8";
+
+        attachments.push(attachment);
     }
 
-    attachment.text = text;
+    message.text = "The following meetups are happening:";
+    message.attachments = attachments;
 
-    slack.postAttachmentToChannel(attachment);
+    slack.postMessageToChannel(message);
     console.log("done");
 }
 
