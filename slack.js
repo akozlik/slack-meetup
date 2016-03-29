@@ -1,24 +1,30 @@
 var requestJson = require('request-json');
 var request = require('request');
+var merge = require('merge');
 
 module.exports = {
 
     baseMessage: function() {
         return {
-            title: "",
+            title: "Test",
             username: "meetup-bot",
             title_link: "",
-            text: "",
-            fallback: "",
+            text: "Test",
+            fallback: "Test",
             icon_url: "https://blog.agilebits.com/wp-content/uploads/2014/09/Meetup-icon.png"
         };
     },
 
-    postEphemeralAttachmentToChannel: function(channel, attachment) {
+    postAttachmentToChannel: function(attachment, channel) {
+        console.log("Posting");
         var message = this.baseMessage();
-        message.text = "Yet another test message";
+        message = merge(message, attachment);
 
-        console.log(JSON.stringify(message));
+        if (channel !== null) {
+            message.channel = channel;
+        }
+
+        console.log(message);
 
         request.post({
             url: process.env.SLACK_WEBHOOK_INCOMING,
@@ -26,12 +32,10 @@ module.exports = {
         }, function(err, httpResponse, body) {
             if (err) {
                 console.error(body);
+            } else {
+                console.log("Message sent");
             }
         });
-
-    },
-
-    postAttachmentToChannel : function(channel, attachment) {
 
     }
 };

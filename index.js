@@ -33,7 +33,9 @@ app.post('/meetup', function(req, res, next) {
 app.get('/', function(req, res) {
     res.render('index');
     // meetup.events("iOS", receivedEvents);
-    slack.postEphemeralAttachmentToChannel(null, null);
+    var attachment = {response_type: "ephemeral", text: "some message"};
+    slack.postAttachmentToChannel(attachment, null);
+    console.log("done");
 });
 
 function receivedEvents(body) {

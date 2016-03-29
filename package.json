@@ -23,6 +23,7 @@
     "dotenv": "*",
     "express": "^4.13.4",
     "hbs": "*",
+    "merge": "^1.2.0",
     "request-json": "*"
   }
 }
