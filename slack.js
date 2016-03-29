@@ -25,14 +25,16 @@ module.exports = {
             message.channel = channel;
         }
 
+        var url = (message.response_url === "") ? process.env.SLACK_WEBHOOK_INCOMING : message.response_url;
+
+        console.log("Sending to URL: " + url);
         request.post({
-            url: process.env.SLACK_WEBHOOK_INCOMING,
+            url: url,
             body: JSON.stringify(message)
         }, function(err, httpResponse, body) {
             if (err) {
                 console.error(body);
             }
         });
-
     }
 };

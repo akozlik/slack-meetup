@@ -33,6 +33,7 @@ app.post('/meetup', function(req, res, next) {
     // console.log(req.body.token);
     // console.log("===== END MEETUP POST =====");
 
+    response_url = req.body.response_url;
     meetup.events("iOS", receivedEvents);
     res.send("");
 });
@@ -74,7 +75,8 @@ function receivedEvents(body) {
 
     message.text = "The following meetups are happening:";
     message.attachments = attachments;
-
+    message.response_url = response_url;
+    
     slack.postMessageToChannel(message);
 }
 
