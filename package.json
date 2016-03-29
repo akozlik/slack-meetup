@@ -20,10 +20,12 @@
   "homepage": "https://github.com/akozlik/slack-meetup#readme",
   "dependencies": {
     "body-parser": "^1.15.0",
+    "dateformat": "^1.0.12",
     "dotenv": "*",
     "express": "^4.13.4",
     "hbs": "*",
     "merge": "^1.2.0",
-    "request-json": "*"
+    "request-json": "*",
+    "striptags": "^2.1.1"
   }
 }

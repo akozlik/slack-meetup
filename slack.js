@@ -18,13 +18,14 @@ module.exports = {
     postAttachmentToChannel: function(attachment, channel) {
         console.log("Posting");
         var message = this.baseMessage();
+
         message = merge(message, attachment);
 
         if (channel !== null) {
             message.channel = channel;
         }
 
-        console.log(message);
+        // console.log(message);
 
         request.post({
             url: process.env.SLACK_WEBHOOK_INCOMING,
