@@ -77,7 +77,6 @@ function receivedEvents(body) {
         attachments.push(attachment);
     }
 
-    message.text = "The following meetups are happening:";
     message.attachments = attachments;
     message.response_url = response_url;
     
