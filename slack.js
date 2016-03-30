@@ -27,7 +27,6 @@ module.exports = {
 
         var url = (message.response_url === "") ? process.env.SLACK_WEBHOOK_INCOMING : message.response_url;
 
-        console.log("Sending to URL: " + url);
         request.post({
             url: url,
             body: JSON.stringify(message)
