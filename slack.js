@@ -9,7 +9,7 @@ module.exports = {
             title: "Only upcoming meetups with at least 3 RSVPs will be displayed",
             username: "meetup-bot",
             title_link: "",
-            text: "Test",
+            text: "Only upcoming meetups with at least 3 RSVPs will be displayed",
             fallback: "Test",
             icon_url: "https://blog.agilebits.com/wp-content/uploads/2014/09/Meetup-icon.png"
         };
