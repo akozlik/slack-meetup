@@ -77,6 +77,7 @@ function getDateForText(text) {
 function receivedEvents(body) {
 
     var message = {response_type: "ephemeral"};
+    message.response_url = response_url;
 
     var attachments = [];
 
@@ -106,7 +107,6 @@ function receivedEvents(body) {
     }
 
     message.attachments = attachments;
-    message.response_url = response_url;
 
     slack.postMessageToChannel(message);
 }
