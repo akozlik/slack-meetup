@@ -18,6 +18,7 @@ module.exports = {
     events : function(param, callback) {
 
         var queryString = _buildQueryStringFromParameter(param);
+        console.log("Query String: " + queryString);
         client.get('open_events?' + queryString,
             function(err, res, body) {
                 callback(body);

@@ -6,7 +6,7 @@ module.exports = {
 
     baseMessage: function() {
         return {
-            title: "Test",
+            title: "Only upcoming meetups with at least 3 RSVPs will be displayed",
             username: "meetup-bot",
             title_link: "",
             text: "Test",
@@ -25,14 +25,14 @@ module.exports = {
             message.channel = channel;
         }
 
-        var url = (message.response_url === "") ? process.env.SLACK_WEBHOOK_INCOMING : message.response_url;
+        var url = (message.response_url === "" || message.response_url === undefined) ? process.env.SLACK_WEBHOOK_INCOMING : message.response_url;
 
         request.post({
             url: url,
             body: JSON.stringify(message)
         }, function(err, httpResponse, body) {
             if (err) {
-                console.error(body);
+                console.error("Error: " + err);
             }
         });
     }

@@ -80,8 +80,6 @@ function receivedEvents(body) {
 
     var attachments = [];
 
-    console.log("Meetup Results: " + body.results);
-
     if (body.results === undefined || body.results.length === 0) {
         message.text = "There are no meetups scheduled. How did that happen?";
         slack.postMessageToChannel(message);
@@ -109,6 +107,8 @@ function receivedEvents(body) {
 
     message.attachments = attachments;
     message.response_url = response_url;
+
+    console.log(message);
 
     slack.postMessageToChannel(message);
 }
