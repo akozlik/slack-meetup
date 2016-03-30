@@ -108,8 +108,6 @@ function receivedEvents(body) {
     message.attachments = attachments;
     message.response_url = response_url;
 
-    console.log(message);
-
     slack.postMessageToChannel(message);
 }
 

@@ -11,14 +11,15 @@ module.exports = {
             zip : "32801",
             topic : "",
             page : "20",
-            key : process.env.MEETUP_API_KEY
+            key : process.env.MEETUP_API_KEY,
+            utc_offset: "-18000000"
         };
     },
 
     events : function(param, callback) {
 
         var queryString = _buildQueryStringFromParameter(param);
-        console.log("Query String: " + queryString);
+
         client.get('open_events?' + queryString,
             function(err, res, body) {
                 callback(body);
