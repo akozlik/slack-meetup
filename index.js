@@ -39,26 +39,38 @@ app.get('/meetup', function(req, res) {
 // Set up the POST route
 app.post('/meetup', function(req, res, next) {
 
-    response_url = req.body.response_url;
+    // Store the response URL for Slack
+    if (req.body.response_url != undefined) {
+        response_url = req.body.response_url;
+    }
 
+    // Build an empty parameter object
     var param = meetup.baseParameter();
+
+    // Build the topics search query string and set it
     var topics = topicsArray.join();
     param.topic = topics;
 
+    // Set the time limit if one is available
+    // This could be the current day, week, or month
     var time = getDateForText(req.body.text);
     if (time !== undefined) {
         param.time = moment() + "," + time;
     }
 
+    // Load the events from Meetup using the URL parameter
     meetup.events(param, receivedEvents);
 
+    // Spit out an empty response
     res.send("");
 });
 
+// Route for the index
 app.get('/', function(req, res) {
     res.render('index');
 });
 
+// Given a string, return the appropriate unix timestamp using Moment.js
 function getDateForText(text) {
 
     if (text === "") {
@@ -78,41 +90,56 @@ function getDateForText(text) {
     }
 }
 
-/* Callback */
+// Callback after Meetup API call returns
+// Parses response and sends it into slack
 function receivedEvents(body) {
 
+    // Specify we want a new ephemeral message
     var message = {response_type: "ephemeral"};
+
+    // Set the correct response URL
     message.response_url = response_url;
 
     var attachments = [];
 
+    // Notify the user if we don't have any results
     if (body.results === undefined || body.results.length === 0) {
         message.text = "There are no meetups scheduled. How did that happen?";
         slack.postMessageToChannel(message);
         return;
     }
 
+    // Loop through each meetup event result
     for (var i = 0; i < body.results.length; i++) {
 
         var text = "";
         var result = body.results[i];
+
+        // Start a new attachment
         var attachment = {};
         var date = new Date(result.time);
 
+        // Build the attachment title
         title = "<" + result.event_url + "|" + result.name + ">" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
 
+        // Specify the date of the event and display the description without any HTML tags
         text += dateFormat(date, "dddd, mmmm dS h:MM TT") + "\n";
         text += striptags(result.description) + "\n\n";
 
+        // Set a few other properties for the event
         attachment.title = title;
         attachment.text = text;
         attachment.color = "#A5C8D8";
 
+        // Add the attachment object to the array
         attachments.push(attachment);
     }
 
+    // Set the messages attachments
+    // Each one of these messages is highlighted as a result
     message.attachments = attachments;
 
+    // Send the message into slack
     slack.postMessageToChannel(message);
 }
 
