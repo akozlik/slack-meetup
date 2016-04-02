@@ -1,9 +1,7 @@
 This project uses dotenv for environment variables. Please ensure you create a .env file at the root of this project with the following variables:
 
 ```
-SLACK_CLIENT_SECRET=""
-SLACK_CLIENT_ID=""
-SLACK_URL=""
+SLACK_TOKEN=""
 SLACK_WEBHOOK_INCOMING=""
 MEETUP_API_KEY=""
 ```

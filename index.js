@@ -40,7 +40,7 @@ app.get('/meetup', function(req, res) {
 app.post('/meetup', function(req, res, next) {
 
     // Store the response URL for Slack
-    if (req.body.response_url != undefined) {
+    if (req.body.response_url !== undefined) {
         response_url = req.body.response_url;
     }
 
