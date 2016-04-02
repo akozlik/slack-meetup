@@ -42,6 +42,7 @@ app.post('/meetup', function(req, res, next) {
     // Store the response URL for Slack
     if (req.body.response_url !== undefined) {
         
+        // Make sure we have a valid request
         if (req.body.token !== process.env.SLACK_TOKEN) {
             res.send("");
             return;
