@@ -133,7 +133,9 @@ function isNumeric(n) {
 
 function isValidRequest(req, token) {
     if (req.body.response_url !== undefined) {
-        
+
+        console.log("Req token: " + req.body.token);
+        console.log("Actual token: " + token);
         if (req.body.token !== token) {
             console.log("Wrong token");
             return false;
