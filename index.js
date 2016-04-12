@@ -273,6 +273,7 @@ function parseRedditRSS(results) {
     message.attachments = attachments;
 
     // Send the message into slack
+    message.text = "";
     slack.postMessageToChannel(message);
 }
 
