@@ -83,7 +83,6 @@ app.post('/r', function(req, res, next) {
 
         var text = req.body.text;
         var args = text.split(" ");
-        console.log(args);
 
         var sub = args[0];
         var mid = args[1];
@@ -118,12 +117,6 @@ app.post('/r', function(req, res, next) {
             console.log(params);
 
             reddit.posts(params, parseRedditRSS);
-
-            if (limit !== undefined) {
-                query += " limited to " + limit;
-            }
-
-            console.log(query);
         }
         res.send("");
     } else {
@@ -237,7 +230,7 @@ function receivedEvents(body) {
 }
 
 function parseRedditRSS(results) {
-    console.log(results);
+
     // Specify we want a new ephemeral message
     var message = {response_type: "ephemeral"};
 
@@ -253,18 +246,20 @@ function parseRedditRSS(results) {
         return;
     }
 
+
     for (var i = 0; i < results.length; i++) {
         var result = results[i];
+
         var text = "";
 
         var attachment = {};
 
         // Build the attachment title
-        title = result.title;
+        title = "<https://www.reddit.com/" + result.data.permalink + "|" + result.data.title + ">";
 
         // Specify the date of the event and display the description without any HTML tags
-        text += "Upvotes: " + result.ups;
-        text += striptags(result.description) + "\n\n";
+        text += "<" + result.data.url + "|Direct Link> ";
+        text += "&#x25B2;: " + result.ups;
 
         // Set a few other properties for the event
         attachment.title = title;
@@ -275,6 +270,7 @@ function parseRedditRSS(results) {
         attachments.push(attachment);
     }
 
+    // console.log(message);
     message.attachments = attachments;
 
     // Send the message into slack
