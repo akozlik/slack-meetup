@@ -258,7 +258,7 @@ function parseRedditRSS(results) {
 
         // Specify the date of the event and display the description without any HTML tags
         text += "<" + result.data.url + "|Direct Link> ";
-        text += "&#x25B2;: " + result.ups;
+        text += "▲: " + result.ups;
 
         // Set a few other properties for the event
         attachment.title = title;
