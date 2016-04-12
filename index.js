@@ -113,7 +113,7 @@ app.post('/r', function(req, res, next) {
             var params = reddit.baseParameter();
             params.sub = sub;
             params.sort = sort;
-            params.limit = 20;
+            params.limit = limit;
             console.log(params);
 
             reddit.posts(params, parseRedditRSS);
