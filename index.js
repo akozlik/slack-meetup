@@ -256,7 +256,7 @@ function parseRedditRSS(results) {
         var attachment = {};
 
         // Build the attachment title
-        title = "<https://www.reddit.com/" + result.data.permalink + "|" + result.data.title + ">";
+        title = "<https://www.reddit.com/" + result.data.permalink + "|" + result.data.title + "> posted by <https://www.reddit.com/u/" + result.data.author + "|" + result.data.author + ">";
 
         // Specify the date of the event and display the description without any HTML tags
         text += "<" + result.data.url + "|Direct Link> ";
