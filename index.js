@@ -101,9 +101,10 @@ app.post('/r', function(req, res, next) {
 
             if (!isNumeric(mid)) {
                 sort = mid;
+            }
+
+            if (limit === undefined) {
                 limit = 20;
-            } else {
-                limit = mid;
             }
 
             if (sort !== undefined) {
@@ -114,6 +115,7 @@ app.post('/r', function(req, res, next) {
             params.sub = sub;
             params.sort = sort;
             params.limit = limit;
+            console.log("params");
             console.log(params);
 
             reddit.posts(params, parseRedditRSS);
