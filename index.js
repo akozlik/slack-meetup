@@ -76,7 +76,6 @@ app.post('/meetup', function(req, res, next) {
 
 app.post('/r', function(req, res, next) {
 
-    req.body.response_url = "whatever";
     var validRequest = isValidRequest(req, process.env.SLACK_R_TOKEN);
 
     if (validRequest) {
@@ -238,6 +237,7 @@ function receivedEvents(body) {
 }
 
 function parseRedditRSS(results) {
+    console.log(results);
     // Specify we want a new ephemeral message
     var message = {response_type: "ephemeral"};
 

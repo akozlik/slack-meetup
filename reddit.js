@@ -20,6 +20,7 @@ module.exports = {
 
         // Generate our API query string
         var queryString = _buildQueryStringFromParameter(param);
+        console.log(client);
 
         // Send the request to receive all available events
         client.get(queryString,
