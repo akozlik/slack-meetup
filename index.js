@@ -1,10 +1,10 @@
 require('dotenv').config();
+require('moment-timezone');
 
 var bodyParser = require('body-parser');
 var meetup = require('./meetup-api.js');
 var slack = require('./slack.js');
 var striptags = require('striptags');
-var dateFormat = require('dateformat');
 var moment = require("moment");
 var express = require('express');
 var hbs = require('hbs');
@@ -80,7 +80,6 @@ app.get('/', function(req, res) {
 
 // Given a string, return the appropriate unix timestamp using Moment.js
 function getDateForText(text) {
-
     if (text === "") {
         return;
     }
@@ -131,7 +130,7 @@ function receivedEvents(body) {
         title = "<" + result.event_url + "|" + result.name + ">" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
 
         // Specify the date of the event and display the description without any HTML tags
-        text += dateFormat(date, "dddd, mmmm dS h:MM TT") + "\n";
+        text += moment(date).tz("America/New_York").format("dddd, MMMM Do h:mm a") + "\n";
         text += striptags(result.description) + "\n\n";
 
         // Set a few other properties for the event
