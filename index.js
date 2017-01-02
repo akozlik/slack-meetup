@@ -15,7 +15,7 @@ var app = express();
 var response_url = "";
 
 // Search topics for meetup
-var topicsArray = ["iOS","android","react","php","javascript","iot","dotnet","ruby","angular","aws","bigdata","clojure","css","drupal","wordpress","programming","java","node","swift","objective-c","sql", "frontpage", "UX", "VR", "Virtual Reality"];
+var topicsArray = ["computer-programming","ios","ios-development","swift-language","objective-c","android","android-developers","java","mobile-development","javascript","reactjs","nodejs","angularjs","php","internet-of-things","dotnet","ruby","amazon-web-services","big-data","clojure","css","drupal","wordpress","sql","user-experience","ui-design","virtual-reality","agile-project-management"];
 
 // Configure the express app
 app.set('port', 3000);
