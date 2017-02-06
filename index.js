@@ -85,15 +85,15 @@ function getDateForText(text) {
     }
 
     if (text === "today") {
-        return moment().endOf("day");
+        return moment().tz("America/New_York").endOf("day");
     }
 
     if (text === "week") {
-        return moment().endOf("week");
+        return moment().tz("America/New_York").endOf("week");
     }
 
     if (text === "month") {
-        return moment().endOf("month");
+        return moment().tz("America/New_York").endOf("month");
     }
 }
 
