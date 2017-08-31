@@ -1,10 +1,10 @@
 require('dotenv').config();
+require('moment-timezone');
 
 var bodyParser = require('body-parser');
 var meetup = require('./meetup-api.js');
 var slack = require('./slack.js');
 var striptags = require('striptags');
-var dateFormat = require('dateformat');
 var moment = require("moment");
 var express = require('express');
 var hbs = require('hbs');
@@ -16,7 +16,7 @@ var app = express();
 var response_url = "";
 
 // Search topics for meetup
-var topicsArray = ["iOS","android","react","php","javascript","iot","dotnet","ruby","angular","aws","bigdata","clojure","css","drupal","wordpress","programming","java","node","swift","objective-c","sql", "frontpage", "UX", "VR", "Virtual Reality"];
+var topicsArray = ["computer-programming","ios","ios-development","swift-language","objective-c","android","android-developers","java","mobile-development","javascript","reactjs","nodejs","angularjs","php","internet-of-things","dotnet","ruby","amazon-web-services","big-data","clojure","css","drupal","wordpress","sql","user-experience","ui-design","virtual-reality","agile-project-management","saas-software-as-a-service","opensource","softwaredev"];
 
 // Configure the express app
 app.set('port', 3000);
@@ -159,21 +159,20 @@ app.get('/', function(req, res) {
 
 // Given a string, return the appropriate unix timestamp using Moment.js
 function getDateForText(text) {
-
     if (text === "") {
         return;
     }
 
     if (text === "today") {
-        return moment().endOf("day");
+        return moment().tz("America/New_York").endOf("day");
     }
 
     if (text === "week") {
-        return moment().endOf("week");
+        return moment().tz("America/New_York").endOf("week");
     }
 
     if (text === "month") {
-        return moment().endOf("month");
+        return moment().tz("America/New_York").endOf("month");
     }
 }
 
@@ -210,7 +209,7 @@ function receivedEvents(body) {
         title = "<" + result.event_url + "|" + result.name + ">" + " hosted by <http://www.meetup.com/" + result.group.urlname + "|" + result.group.name + ">\n";
 
         // Specify the date of the event and display the description without any HTML tags
-        text += dateFormat(date, "dddd, mmmm dS h:MM TT") + "\n";
+        text += moment(date).tz("America/New_York").format("dddd, MMMM Do h:mm a") + "\n";
         text += striptags(result.description) + "\n\n";
 
         // Set a few other properties for the event
