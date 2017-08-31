@@ -16,7 +16,8 @@ var app = express();
 var response_url = "";
 
 // Search topics for meetup
-var topicsArray = ["computer-programming","ios","ios-development","swift-language","objective-c","android","android-developers","java","mobile-development","javascript","reactjs","nodejs","angularjs","php","internet-of-things","dotnet","ruby","amazon-web-services","big-data","clojure","css","drupal","wordpress","sql","user-experience","ui-design","virtual-reality","agile-project-management","saas-software-as-a-service","opensource","softwaredev"];
+var engineeringTopics = ["computer-programming","ios","ios-development","swift-language","objective-c","android","android-developers","java","mobile-development","javascript","reactjs","nodejs","angularjs","php","internet-of-things","dotnet","ruby","amazon-web-services","big-data","clojure","css","drupal","wordpress","sql","user-experience","ui-design","virtual-reality","agile-project-management","saas-software-as-a-service","opensource","softwaredev"];
+var designTopics = ["design", "sketch", "photoshop", "illustrator", "graphic design", "ux", "user experience", "dribble"];
 
 // Configure the express app
 app.set('port', 3000);
@@ -57,7 +58,15 @@ app.post('/meetup', function(req, res, next) {
     var param = meetup.baseParameter();
 
     // Build the topics search query string and set it
-    var topics = topicsArray.join();
+
+    var topics = Array()
+
+    if (req.body.team_id == "T03E1AWDP") // Orlando Devs
+        topics = engineeringTopics.join();
+    else if (req.body.team_id == "T03EDNQMH") { // Orlando Designer
+        topics = designTopics.join();
+    }
+
     param.topic = topics;
 
     // Set the time limit if one is available
