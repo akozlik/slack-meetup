@@ -41,18 +41,19 @@ app.get('/meetup', function(req, res) {
 // Set up the POST route
 app.post('/meetup', function(req, res, next) {
 
-    res.send("hi");
     // Store the response URL for Slack
     if (req.body.response_url !== undefined) {
 
         // Make sure we have a valid request
         if (req.body.token !== process.env.SLACK_TOKEN || req.body.token !== process.env.DESIGN_SLACK_TOKEN) {
-            res.send("");
+            res.send("Slack token is bad");
             return;
         }
 
         response_url = req.body.response_url;
 
+    } else {
+        res.send("There is no body");
     }
 
     // Build an empty parameter object
