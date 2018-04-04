@@ -46,8 +46,7 @@ app.post('/meetup', function(req, res, next) {
 
         // Make sure we have a valid request
         if (req.body.token !== process.env.SLACK_TOKEN || req.body.token !== process.env.DESIGN_SLACK_TOKEN) {
-            res.send("Slack token is bad");
-            res.send("Token: " + req.body.token);
+            res.send("Slack token" + req.body.token + " is bad");
             return;
         }
 
