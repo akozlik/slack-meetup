@@ -9,7 +9,9 @@ var moment = require("moment");
 var express = require("express");
 var hbs = require("hbs");
 var reddit = require("./reddit.js");
-
+var qs = require("querystring");
+const axios = require("axios");
+const tokenCache = {}; // Is this a stupid idea. Yes it is.
 // Instantiate a new express app
 var app = express();
 
@@ -75,6 +77,48 @@ app.use(
   })
 );
 
+app.get("/generate-token", (req, res) => {
+  const url = `https://secure.meetup.com/oauth2/authorize?client_id=${
+    process.env.MEETUP_KEY
+  }&response_type=code&redirect_uri=${process.env.MEETUP_REDIRECT_URI}`;
+  res.redirect(url);
+});
+
+app.get("/fetch-meetup-token", (req, res) => {
+  const { code } = req.query;
+
+  const postData = {
+    client_id: process.env.MEETUP_KEY,
+    client_secret: process.env.MEETUP_SECRET,
+    grant_type: "authorization_code",
+    redirect_uri: process.env.MEETUP_REDIRECT_URI,
+    code
+  };
+
+  const config = {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
+  };
+
+  // Request json won't work since we want url-encoded for meetup api
+  axios
+    .post(
+      "https://secure.meetup.com/oauth2/access",
+      qs.stringify(postData),
+      config
+    )
+    .then(({ data }) => {
+      console.log(data);
+
+      tokenCache["meetup"] = data;
+      res.json(data);
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
 // Set up the GET route
 app.get("/meetup", function(req, res) {
   res.send("Meetup");
@@ -126,6 +170,8 @@ app.post("/meetup", function(req, res, next) {
   if (time !== undefined) {
     param.time = moment() + "," + time;
   }
+
+  param.access_token = tokenCache.meetup.access_token;
 
   // Load the events from Meetup using the URL parameter
   meetup.events(param, receivedEvents);
@@ -210,6 +256,7 @@ function isValidRequest(req, token) {
 
 // Route for the index
 app.get("/", function(req, res) {
+  console.log(req.body);
   res.render("index");
 });
 
