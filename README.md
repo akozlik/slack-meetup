@@ -17,4 +17,4 @@ All slack keys can be generated with incoming and outgoing hooks. The meetup API
 
 - go to `/generate-token` and sign in.
 
-Token will refresh every 15 min. Everything is currently in mememory
+Token will refresh every 15 min. Everything is currently in memory
