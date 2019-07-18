@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "touch .env",
+    "watch": "nodemon index.js",
     "start": "node index.js"
   },
   "repository": {
@@ -29,5 +30,8 @@
     "moment-timezone": "^0.5.4",
     "request-json": "*",
     "striptags": "^2.1.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1"
   }
 }
