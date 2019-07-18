@@ -1,16 +1,19 @@
 // Use request JSON for quick JSON loading
-var requestJson = require("request-json");
+const requestJson = require("request-json");
 require("moment-timezone");
-var moment = require("moment");
-var striptags = require("striptags");
+const moment = require("moment");
+const striptags = require("striptags");
 const tokenCache = {}; // Is this a stupid idea. Yes it is.
 const router = require("express").Router();
-var qs = require("querystring");
+const qs = require("querystring");
 const axios = require("axios");
-var slack = require("./slack.js");
-var response_url = "";
+const slack = require("./slack.js");
+const cron = require("node-cron");
+
+let response_url = "";
+
 // Search topics for meetup
-var engineeringTopics = [
+const engineeringTopics = [
   "computer-programming",
   "ios",
   "ios-development",
@@ -43,7 +46,7 @@ var engineeringTopics = [
   "opensource",
   "softwaredev"
 ];
-var designTopics = [
+const designTopics = [
   "design",
   "sketch",
   "photoshop",
@@ -120,11 +123,11 @@ router.post("/meetup", function(req, res, next) {
   }
 
   // Build an empty parameter object
-  var param = baseParameter();
+  const param = baseParameter();
 
   // Build the topics search query string and set it
 
-  var topics = Array();
+  let topics = Array();
 
   console.log(req.body.team_id);
 
@@ -134,21 +137,19 @@ router.post("/meetup", function(req, res, next) {
   else if (req.body.team_id == "T03EDNQMH") {
     // Orlando Designer
     topics = designTopics.join();
-  } else if (req.body.team_id == "TL64V3Y75") {
-    // German sandbox slack
-    topics = engineeringTopics.join();
+  } else {
+    // Why not both?
+    topics = [...engineeringTopics, ...designTopics].join();
   }
 
   param.topic = topics;
 
   // Set the time limit if one is available
   // This could be the current day, week, or month
-  var time = getDateForText(req.body.text);
+  const time = getDateForText(req.body.text);
   if (time !== undefined) {
     param.time = moment() + "," + time;
   }
-
-  param.access_token = tokenCache.meetup.access_token;
 
   // Load the events from Meetup using the URL parameter
   events(param, receivedEvents);
@@ -158,7 +159,7 @@ router.post("/meetup", function(req, res, next) {
 });
 
 // Create a new Meetup API client
-var client = requestJson.createClient("https://api.meetup.com/2/");
+const client = requestJson.createClient("https://api.meetup.com/2/");
 
 function baseParameter() {
   return {
@@ -167,14 +168,14 @@ function baseParameter() {
     zip: "32801",
     topic: "",
     page: "20",
-    //   key: process.env.MEETUP_API_KEY,
-    utc_offset: "-18000000"
+    utc_offset: "-18000000",
+    access_token: tokenCache.meetup.access_token
   };
 }
 
 function events(param, callback) {
   // Generate our API query string
-  var queryString = _buildQueryStringFromParameter(param);
+  const queryString = _buildQueryStringFromParameter(param);
 
   console.log(queryString);
   // Send the request to receive all available events
@@ -188,12 +189,12 @@ function events(param, callback) {
 // Parses response and sends it into slack
 function receivedEvents(body) {
   // Specify we want a new ephemeral message
-  var message = { response_type: "ephemeral" };
+  const message = { response_type: "ephemeral" };
 
   // Set the correct response URL
   message.response_url = response_url;
 
-  var attachments = [];
+  const attachments = [];
 
   // Notify the user if we don't have any results
   if (body.results === undefined || body.results.length === 0) {
@@ -203,13 +204,13 @@ function receivedEvents(body) {
   }
 
   // Loop through each meetup event result
-  for (var i = 0; i < body.results.length; i++) {
-    var text = "";
-    var result = body.results[i];
+  for (let i = 0; i < body.results.length; i++) {
+    let text = "";
+    const result = body.results[i];
 
     // Start a new attachment
-    var attachment = {};
-    var date = new Date(result.time);
+    const attachment = {};
+    const date = new Date(result.time);
 
     // Build the attachment title
     title =
@@ -250,14 +251,13 @@ function receivedEvents(body) {
 
 // Given a JSON object, build the associated parameter string
 function _buildQueryStringFromParameter(param) {
-  var str = [];
+  const str = [];
 
   // Loop through each parameter and build a key=value string
-  for (var p in param)
+  for (let p in param)
     if (param.hasOwnProperty(p)) {
       str.push(encodeURIComponent(p) + "=" + encodeURIComponent(param[p]));
     }
-
   // Return & separated query string
   return str.join("&");
 }
@@ -286,6 +286,39 @@ function getDateForText(text) {
       .endOf("month");
   }
 }
+
+cron.schedule("*/15 * * * *", () => {
+  if (tokenCache.meetup) {
+    const postData = {
+      client_id: process.env.MEETUP_KEY,
+      client_secret: process.env.MEETUP_SECRET,
+      grant_type: "refresh_token",
+      refresh_token: tokenCache.meetup.refresh_token
+    };
+
+    const config = {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      }
+    };
+
+    // Request json won't work since we want url-encoded for meetup api
+    axios
+      .post(
+        "https://secure.meetup.com/oauth2/access",
+        qs.stringify(postData),
+        config
+      )
+      .then(({ data }) => {
+        console.log(data);
+
+        tokenCache["meetup"] = data;
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+});
 
 module.exports = {
   router
